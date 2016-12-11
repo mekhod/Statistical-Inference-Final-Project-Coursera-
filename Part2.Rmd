@@ -1,0 +1,48 @@
+---
+title: "Part2"
+author: "MK"
+date: "December 9, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary:
+
+```{r cars}
+data("ToothGrowth")
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+summary(ToothGrowth)
+```
+##Confidence Intervals:
+First, the two delivery methods of VC and OJ are compared.
+
+```{r}
+t.test(ToothGrowth$len~ToothGrowth$supp, paired = FALSE)$conf
+```
+As the results show, zero is in the calculated confidence interval, so we fail to reject the null hypothesis that the two delivery methods have the same effects on the length of odontoblasts.
+
+In order to calculate the confidence intervals related to different independent groups of doses( (0.5 and 1), (0.5 and 2), and (1 and 2) ), three datasets are sliced as follows:
+```{r}
+x1 <- ToothGrowth[ToothGrowth$dose==c(0.5,1),]
+x2 <- ToothGrowth[ToothGrowth$dose==c(0.5,2),]
+x3 <- ToothGrowth[ToothGrowth$dose==c(1,2),]
+```
+The confidence interval of each group is calculated as follows:
+```{r}
+t.test(len~dose, paired = FALSE, data = x1)$conf
+```
+Because zero is not in the confidence interval, we reject the null hypothesis that the two doses have the same effects. In addition, because the confidence interval is below zero we can conclude that dose 1 is more effective than dose 0.5.
+```{r}
+t.test(len~dose, paired = FALSE, data = x2)$conf
+```
+We reject the null hypothesis that the two doses of 0.5 and 2 have the same effects. We can also conclude that dose 2 is more effective than dose 0.5.
+```{r}
+t.test(len~dose, paired = FALSE, data = x3)$conf
+```
+We reject the null hypothesis that the two doses of 1 and 2 have the same effects. We can also conclude that dose 2 is more effective than dose 1.
+
+## Conclusion:
+The two delivery methods, very probably, have the same effects on the length of odontoblasts. However, dose 2 is more effective than both doses of 0.5 and 1 while dose 1 is more effective than dose 0.5.

@@ -1,0 +1,64 @@
+---
+title: "Statistical Inference Course Project"
+author: "MK"
+date: "December 9, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Simulations: In this analysis, 40000 random exponential numbers are created using rexp function in R. Then, these numbers are rearranged in a 1000(row) by 40(colomn) matrix.
+
+Sample Mean versus Theoretical Mean: The mean of each row is calculated which yields a 1000 by 1 matrix. It is shown that the mean of the samples means is almost equal to the theoritical mean of the distribution.
+
+Sample Variance versus Theoretical Variance: The distribution variance is also almost equal to the theoritical variance.
+
+Distribution: The histograms of the random exponential numbers distribution and the samples means are also shown. From the histograms, it can be concluded that the samples means distibution is almost normal, but the random exponential numbers distribution is not normal.
+
+In the end, the 95% confidance interval of the distribution is calculated.
+
+```{r}
+lambda <- 0.2
+n <- 40
+
+exps <- rexp(1000*n, lambda)
+expsMatrix <- matrix(exps, 1000, 40)
+```
+```{r}
+samplesMean <- apply(expsMatrix, 1, mean)
+sprintf("distribution center (mean): %s", round( mean(samplesMean),3 ))
+theoryMean = 1/lambda
+sprintf("theoritical center (mean): %s", round( theoryMean,3 ))
+```
+
+As shown in the above analysis, the distribution mean (center) and theoritical mean (center) are almost equal.
+```{r}
+sprintf("distribution variance: %s", round( var(exps),3 ))
+theoryVar <- (1/lambda)^2
+sprintf("theoritical variance: %s", round( theoryVar,3 ))
+
+```
+As shown in the above analysis, the distribution variance and theoritical variance are almost equal.
+
+## Histograms:
+
+```{r pressure, echo=FALSE}
+hist(exps, xlab='random exponential values', main = 'Histogram of Simuated Values', border = FALSE, col = 'brown')
+hist(samplesMean, xlab='sample mean', main = 'Histogram of Samples Means', border = FALSE, col = 'blue')
+```
+
+As obvious in the histograms, the distribution of the samples means is normal, while the distribution of the random exponential values is not.
+
+## Confidence Interval:
+```{r}
+confidenceInterval <- mean(samplesMean) + c(-1,1)*qt(.975, 1000-1)*sqrt(var(exps)/40)
+
+```{r echo = FALSE}
+
+sprintf("confidence interval:")
+confidenceInterval
+```
+
+
